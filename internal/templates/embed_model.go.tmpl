@@ -1,0 +1,25 @@
+package mg{{.PackageName}}
+
+import ({{range $_, $v := .Imports}}
+	"{{$v}}"
+{{end}}
+)
+
+{{range $_, $v := .Models}}
+type {{$v.Name}} struct { {{range $_, $f := $v.Fields}}
+	{{$f.Upper}} {{$f.Type}} `bson:"{{$f.Snake}}" json:"{{$f.Snake}},omitempty"`{{end}}
+}
+{{end}}
+{{range $_, $v := .Types}}
+type {{$v.Name}} {{$v.Type}}
+{{end}}
+{{range $_, $v := .Consts}}
+const {{$v.Name}} {{$v.Type}} {{if $v.HasValue}}= {{$v.Value}}{{end}}
+{{end}}
+{{range $_, $v := .Enums}}
+type {{$v.Type}} int
+const ({{range $key, $value := $v.Values}}
+	{{$key}} {{$v.Type}} = {{$value}}{{end}}
+)
+{{end}}
+

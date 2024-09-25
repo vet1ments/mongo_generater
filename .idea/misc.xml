@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11" project-jdk-type="Python SDK" />
+  <component name="ProtobufLanguageSettings">
+    <option name="importPathEntries">
+      <list>
+        <ImportPathEntry>
+          <option name="location" value="file://$USER_HOME$/protobuf/include" />
+        </ImportPathEntry>
+      </list>
+    </option>
+  </component>
+</project>
