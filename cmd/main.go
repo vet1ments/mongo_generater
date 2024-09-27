@@ -21,12 +21,6 @@ func exitProgram(s string) {
 	os.Exit(0)
 }
 
-//go:embed templates/embed_model.go.tmpl
-var embedTemplate string
-
-//go:embed templates/model.go.tmpl
-var modelTemplate string
-
 func main() {
 	flag.Parse()
 
@@ -95,7 +89,7 @@ func main() {
 			exitProgram(err.Error())
 		}
 	}
-	tmpl, err := template.New("embed").Parse(embedTemplate)
+	tmpl, err := template.New("embed").Parse(internal.EmbedTemplateBinary)
 	if err != nil {
 		exitProgram("embed model템플릿 파일 파싱 실패")
 	}

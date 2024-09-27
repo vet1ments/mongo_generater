@@ -1,3 +1,4 @@
+// generate by gen_mongo DO NOT EDIT
 package mg{{.PackageName}}
 
 import (
@@ -18,6 +19,8 @@ type {{.Name}}Connection struct {
 	Collection *mongo.Collection
 }
 
+
+
 type {{.Name}}Doc struct {
 	ID bson.ObjectID `bson:"_id" json:"id"`    {{range $_, $v := .Fields}}
 	{{$v.Upper}} {{$v.Type}} `bson:"{{$v.Snake}}" json:"{{$v.Snake}},omitempty"`{{end}}
@@ -32,10 +35,19 @@ func Is{{.Name}}CollectionInit() error {
 	return nil
 }
 
-func Init{{.Name}}Collection(client *mongo.Client, db *mongo.Database) {
+type after{{.Name}}CollectionInit func(collection *mongo.Collection) error
+
+func Init{{.Name}}Collection(client *mongo.Client, db *mongo.Database, callback ...after{{.Name}}CollectionInit) error {
 	conn{{.Name}}.Client = client
 	conn{{.Name}}.DB = db
 	conn{{.Name}}.Collection = db.Collection({{.Name}}Collection)
+	for _, f := range callback {
+		err := f(conn{{.Name}}.Collection)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func Get{{.Name}}(id bson.ObjectID) (*{{.Name}}Doc, error) {
@@ -131,3 +143,10 @@ func FindOne{{.Name}}Doc(filter interface{},
 	return data, nil
 }
 
+
+
+{{$test := .Name}}
+type {{.Name}}Bson struct {}
+{{range $_, $v := .Fields}}
+// get bson field name of {{$v.Upper}}
+func (o {{$test}}Bson) {{$v.Upper}}() string {return "{{$v.Snake}}"}{{end}}

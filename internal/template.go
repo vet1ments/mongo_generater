@@ -62,12 +62,6 @@ func CreateTemplateFromModelContainer(c *ModelContainer) {
 
 }
 
-//go:embed templates/embed_model.go.tmpl
-var embedTemplate string
-
-//go:embed templates/model.go.tmpl
-var modelTemplate string
-
 func CreateTemplateFromEmbedModels(e *EmbedModels, packageName, createPath string, modulePath string, imports ...string) (*EmbedModelTemplate, error) {
 	//tmpl, err := template.New("embed").Parse(embedTemplate)
 	//if err != nil {
@@ -138,7 +132,7 @@ func CreateTemplateFromEmbedModels(e *EmbedModels, packageName, createPath strin
 }
 
 func CreateTemplateFromModels(m []*Model, packageName string, createPath string, modulePath string, imports_ ...string) error {
-	tmpl, err := template.New("model").Parse(modelTemplate)
+	tmpl, err := template.New("model").Parse(ModelTemplateBinary)
 	if err != nil {
 		return errors.New("embed model템플릿 파일 파싱 실패")
 	}
