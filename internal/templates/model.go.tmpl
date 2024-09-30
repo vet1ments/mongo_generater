@@ -64,6 +64,29 @@ func Get{{.Name}}(id bson.ObjectID) (*{{.Name}}Doc, error) {
 	return model, nil
 }
 
+func Get{{.Name}}List(ids []bson.ObjectID) ([]{{.Name}}Doc, error) {
+	if e := Is{{.Name}}CollectionInit(); e != nil {
+		return nil, e
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	models := make([]{{.Name}}Doc, 0)
+	col := conn{{.Name}}.Collection
+	cur, err := col.Find(ctx, bson.M{"_id": bson.M{"$in": ids}})
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		model := {{.Name}}Doc{}
+		if err = cur.Decode(&model); err != nil {
+			continue
+		} else {
+			models = append(models, model)
+		}
+	}
+	return models, nil
+}
+
 func GetAll{{.Name}}() ([]*{{.Name}}Doc, error) {
 	if e := Is{{.Name}}CollectionInit(); e != nil {
 		return nil, e
@@ -79,7 +102,7 @@ func GetAll{{.Name}}() ([]*{{.Name}}Doc, error) {
 	models := make([]*{{.Name}}Doc, 0)
 	for cur.Next(ctx) {
 		model := &{{.Name}}Doc{}
-		if err = cur.Decode(&model); err != nil {
+		if err = cur.Decode(model); err != nil {
 			continue
 		} else {
 			models = append(models, model)
